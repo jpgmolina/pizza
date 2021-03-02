@@ -83,7 +83,7 @@ class pdbfile:
     elif len(args) == 2:
       filestr = args[0]
       self.data = args[1]
-    else: raise StandardError, "invalid args for pdb()"
+    else: raise Exception ("invalid args for pdb()")
 
     # flist = full list of all PDB input file names
     # append .pdb if needed
@@ -94,17 +94,17 @@ class pdbfile:
       for file in list:
         if '*' in file: flist += glob.glob(file)
         else: flist.append(file)
-      for i in xrange(len(flist)):
+      for i in range(len(flist)):
         if flist[i][-4:] != ".pdb": flist[i] += ".pdb"
       if len(flist) == 0:
-        raise StandardError,"no PDB file specified"
+        raise Exception ("no PDB file specified")
       self.files = flist
     else: self.files = []
 
     if len(self.files) > 1 and self.data:
-      raise StandardError, "cannot use multiple PDB files with data object"
+      raise Exception ("cannot use multiple PDB files with data object")
     if len(self.files) == 0 and not self.data:
-      raise StandardError, "no input PDB file(s)"
+      raise Exception( "no input PDB file(s)")
 
     # grab PDB file from http://rcsb.org if not a local file
     
@@ -112,7 +112,7 @@ class pdbfile:
       try:
         open(self.files[0],'r').close()
       except:
-        print "downloading %s from http://rcsb.org" % self.files[0]
+        print ("downloading %s from http://rcsb.org" % self.files[0])
         fetchstr = "http://www.rcsb.org/pdb/cgi/export.cgi/%s?format=PDB&pdbId=2cpk&compression=None" % self.files[0]
         urllib.urlretrieve(fetchstr,self.files[0])
 
@@ -143,7 +143,7 @@ class pdbfile:
         if flag == -1: break
         self.convert(f,which)
         print >>f,"END"
-        print time,
+        print (time),
         sys.stdout.flush()
         n += 1
 
@@ -151,11 +151,11 @@ class pdbfile:
       for file in self.files:
         f.write(open(file,'r').read())
         print >>f,"END"
-        print file,
+        print (file),
         sys.stdout.flush()
         
     f.close()
-    print "\nwrote %d datasets to %s in PDB format" % (n,file)
+    print ("\nwrote %d datasets to %s in PDB format" % (n,file))
 
   # --------------------------------------------------------------------
   # write series of numbered PDB files
@@ -190,7 +190,7 @@ class pdbfile:
         self.convert(f,which)
         f.close()
         
-        print time,
+        print (time),
         sys.stdout.flush()
         n += 1
 
@@ -210,12 +210,12 @@ class pdbfile:
         f = open(file,'w')
         f.write(open(infile,'r').read())
         f.close()
-        print file,
+        print (file),
         sys.stdout.flush()
         
         n += 1
 
-    print "\nwrote %d datasets to %s*.pdb in PDB format" % (n,root)
+    print ("\nwrote %d datasets to %s*.pdb in PDB format" % (n,root))
 
   # --------------------------------------------------------------------
   # write a single PDB file
